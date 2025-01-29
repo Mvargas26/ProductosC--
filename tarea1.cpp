@@ -37,7 +37,7 @@ string* vectorProductos(int cantidadProductos) {
     return productosSeleccionados;
 }//fin vectorProductos
 
-//Espera que se oprima una tecla y realiza una accion
+//Espera S o N para saber si sigue
 void esperarTecla() {
     char tecla;
     while (true) {
@@ -60,19 +60,26 @@ void esperarTecla() {
 void esperarTecla_A() {
     char tecla;
     while (true) {
-        cout << "Presione la tecla A para continuar...";
-        cin.ignore(); //Limpia el buffer por los saltos de linea
+        cout << " Presione tecla A para seguir...";
+        //cin.ignore(); //Limpia el buffer por los saltos de linea
         tecla = cin.get(); //obtiene el char de la letra que apretamos
 
         if (tecla == 'A' || tecla == 'a') {
             break; // Continúa la ejecución 
         } else {
-            cout << "Tecla invalida, intenta nuevamente." << endl;
+            cout << "Tecla invalida, intenta nuevamente. ";
         }
     }
 }//fin esperarTecla_A
 
-//Espera que se oprima P y realiza una accion
+//Espera que se oprima A y realiza una accion
+void esperarTecla_Enter() {
+     cout <<" Enter para seguir";
+        _getch();
+  
+}//fin esperarTecla_Enter
+
+//Espera que se oprima P y realiza una interrupcion simulada
 void interrupcionDeLa_P(char tecla,int numProducto,string nombreProducto){
 
         if (tecla == 'P' || tecla == 'p') {
@@ -87,12 +94,12 @@ void interrupcionesDelUsuario(bool &debeSalir, int numProducto, string nombrePro
         char tecla = _getch(); // Captura la tecla sin esperar el enter
         switch (toupper(tecla)) { // convertimos el char en mayúscula
             case 'C':
-                cout << "\nInterrupcion aplicada por el usuario en el producto No. "
+                cout << " *Interrupcion aplicada por el usuario en el producto No. "
                      << numProducto << " - " << nombreProducto << endl;
                 debeSalir = true;
                 break;
             case 'F':
-                cout << "\nInterrupción aplicada para finalizar el programa en el producto No. "
+                cout << " *Interrupcion aplicada para finalizar el programa en el producto No. "
                      << numProducto << " - " << nombreProducto << endl;
                 exit(0); // Termina completamente el programa
             default:
@@ -123,7 +130,7 @@ int main(int argc, char const *argv[])
     } while (!validarCantidadProductos(cantidadProductos, productoMalo));
 
     //Pedimos la tecla para continuar
-    cout << "Los datos son validos." << endl;
+    cout << "Los datos son validos... ";
     esperarTecla();
 
     //llenamos el vector dinamico
@@ -132,7 +139,7 @@ int main(int argc, char const *argv[])
     //Recorre el vector de Productos
     int i = 0;
     while (i < cantidadProductos) {
-        cout << "*** Analizando Producto " << (i + 1) << ": " << productos[i] << " ***" << endl;
+        cout << "**Analizando Producto " << (i + 1) << ": " << productos[i] << " **";
     //Validamos que no sea el producto malo
           if (i+1 == productoMalo) {
             interrupcionDeLa_P('P',i+1,productos[i]);
@@ -144,14 +151,13 @@ int main(int argc, char const *argv[])
         bool debeSalir = false;
         int j = 1;
         while (j <= 10) {
-            cout << "\rPunto de Control: " << j << flush;
+            cout << " Conteo:" << j ;
             Sleep(500);
             interrupcionesDelUsuario(debeSalir,i + 1, productos[i]);
 
-
             //si debeSalir ahora es true, sale de los puntos de control
             if(debeSalir){
-                cout << "\nSaltando al siguiente producto...";
+                cout << "Saltando al siguiente producto...";
                 esperarTecla_A();
                 break;
             }
@@ -161,11 +167,12 @@ int main(int argc, char const *argv[])
         if (debeSalir) {
             i++;
             continue; // Pasa al siguiente producto
-        }else{
-           cout << endl; 
         }
-        
-        cout << endl;
+
+        esperarTecla_Enter();
+
+        cout << "\r" << string(150, ' ') << flush;       
+        cout <<"\r"<< flush;
         i++;
     }
     cout << "Fin, Proceso Completado con exito!!!" << endl;
