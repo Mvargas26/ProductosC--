@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <windows.h> // nos deja usar Sleep
-#include <conio.h> //nos eja usar el _getch que ewscucha sin oprimir el enter
+#include <conio.h> //nos eja usar el _getch que escucha sin oprimir el enter
 
 using namespace std;
 
@@ -11,7 +11,7 @@ using namespace std;
 
 //Valida los datos de ingreso entre 5 y 10
 bool validarCantidadProductos(int cantidadProductos, int productoMalo) {
-    if (cantidadProductos < 5 || cantidadProductos > 10 ) {
+     if (cantidadProductos < 5 || cantidadProductos > 10 ) {
         return false;
     }
     if (productoMalo != 0 && productoMalo > cantidadProductos) {
@@ -41,9 +41,9 @@ string* vectorProductos(int cantidadProductos) {
 void esperarTecla() {
     char tecla;
     while (true) {
-        cout << "Presiona 'S' para continuar o 'N' para finalizar: ";
-        cin.ignore(); //Limpia el buffer por los saltos de linea
-        tecla = cin.get(); //obtiene el char de la letra que apretamos
+        cout << "Presiona 'S' para continuar o 'N' para finalizar: "<< endl;
+        //cin.ignore(); //Limpia el buffer por los saltos de linea
+        tecla = _getch(); //obtiene el char de la letra que apretamos
 
         if (tecla == 'S' || tecla == 's') {
             break; // Continúa la ejecución si se presiona 'P' o 'p'
@@ -60,14 +60,14 @@ void esperarTecla() {
 void esperarTecla_A() {
     char tecla;
     while (true) {
-        cout << " Presione tecla A para seguir...";
+        cout << " Presione A para seguir..";
         //cin.ignore(); //Limpia el buffer por los saltos de linea
         tecla = _getch(); //obtiene el char de la letra que apretamos
 
         if (tecla == 'A' || tecla == 'a') {
             break; // Continúa la ejecución 
         } else {
-            cout << "Tecla invalida, intenta nuevamente. ";
+            cout << "Tecla invalida.";
         }
     }
 }//fin esperarTecla_A
@@ -83,8 +83,9 @@ void esperarTecla_Enter() {
 void interrupcionDeLa_P(char tecla,int numProducto,string nombreProducto){
 
         if (tecla == 'P' || tecla == 'p') {
-          cout << "Interrupcion aplicada, para el producto No. " << numProducto << " - " << nombreProducto << endl;
+          cout << "Interrupcion aplicada, para el producto No. " << numProducto << " - " << nombreProducto << " ";
           esperarTecla_A();
+          cout<< endl;
         }
 }//fin interrupcionP
 
@@ -95,12 +96,12 @@ void interrupcionesDelUsuario(bool &debeSalir, int numProducto, string nombrePro
         switch (toupper(tecla)) { // convertimos el char en mayúscula
             case 'C':
                 cout << " *Interrupcion aplicada por el usuario en el producto No. "
-                     << numProducto << " - " << nombreProducto << endl;
+                     << numProducto << " - " << nombreProducto << " ";
                 debeSalir = true;
                 break;
             case 'F':
                 cout << " *Interrupcion aplicada para finalizar el programa en el producto No. "
-                     << numProducto << " - " << nombreProducto << endl;
+                     << numProducto << " - " << nombreProducto << " ";
                 exit(0); // Termina completamente el programa
             default:
                 // No hacer nada para otras teclas
@@ -122,15 +123,15 @@ int main(int argc, char const *argv[])
 {
     //Pedimos los 2 datos y validamos cumpla entre 5 y 10
    do {
-        cout << "Ingrese la cantidad de productos: ";
+        cout << "Ingrese la cantidad de productos en numero: ";
         cin >> cantidadProductos;
 
-        cout << "Ingrese el producto malo: ";
+        cout << "Ingrese el numero del producto en mal estado: ";
         cin >> productoMalo;
     } while (!validarCantidadProductos(cantidadProductos, productoMalo));
 
     //Pedimos la tecla para continuar
-    cout << "Los datos son validos... ";
+    cout << "Los datos son validos.. ";
     esperarTecla();
 
     //llenamos el vector dinamico
@@ -152,12 +153,12 @@ int main(int argc, char const *argv[])
         int j = 1;
         while (j <= 10) {
             cout << " Conteo:" << j ;
-            Sleep(500);
+            Sleep(400);
             interrupcionesDelUsuario(debeSalir,i + 1, productos[i]);
 
             //si debeSalir ahora es true, sale de los puntos de control
             if(debeSalir){
-                cout << "Saltando al siguiente producto...";
+                cout << " Saltando al siguiente producto. ";
                 esperarTecla_A();
                 break;
             }
@@ -177,7 +178,6 @@ int main(int argc, char const *argv[])
     }
     cout << "Fin, Proceso Completado con exito!!!" << endl;
     
-
   delete[] productos; //libera la memoria del arreglo dinamico
    return 0;
 }//fin del metod main
