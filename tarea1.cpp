@@ -62,7 +62,7 @@ void esperarTecla_A() {
     while (true) {
         cout << " Presione tecla A para seguir...";
         //cin.ignore(); //Limpia el buffer por los saltos de linea
-        tecla = cin.get(); //obtiene el char de la letra que apretamos
+        tecla = _getch(); //obtiene el char de la letra que apretamos
 
         if (tecla == 'A' || tecla == 'a') {
             break; // Continúa la ejecución 
@@ -74,7 +74,7 @@ void esperarTecla_A() {
 
 //Espera que se oprima A y realiza una accion
 void esperarTecla_Enter() {
-     cout <<" Enter para seguir";
+     cout <<" -Tecla para seguir..";
         _getch();
   
 }//fin esperarTecla_Enter
@@ -171,7 +171,7 @@ int main(int argc, char const *argv[])
 
         esperarTecla_Enter();
 
-        cout << "\r" << string(150, ' ') << flush;       
+        cout << "\r" << string(175, ' ') << flush;       
         cout <<"\r"<< flush;
         i++;
     }
