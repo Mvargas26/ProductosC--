@@ -163,7 +163,7 @@ int main(int argc, char const *argv[])
     //Recorre el vector de Productos
     int i = 0;
     while (i < cantidadProductos) {
-        cout << "**Analizando Producto " << (i + 1) << ": " << productos[i] << " **";
+        cout << "**Analizando Producto " << (i + 1) << ": " << productos[i] << " **" << " Conteo:" ;
     //Validamos que no sea el producto malo
           if (i+1 == productoMalo) {
             interrupcionDeLa_P('P',i+1,productos[i]);
@@ -175,7 +175,7 @@ int main(int argc, char const *argv[])
         bool debeSalir = false;
         int j = 1;
         while (j <= 10) {
-            cout << " Conteo:" << j ;
+            cout <<" "<< j ;
             Sleep(400);
             interrupcionesDelUsuario(debeSalir,i + 1, productos[i]);
 
