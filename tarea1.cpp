@@ -108,26 +108,49 @@ void interrupcionesDelUsuario(bool &debeSalir, int numProducto, string nombrePro
                 break;
         }
     }
-}
+}//fin interrupcionesDelUsuario
+
+bool esNumero(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!isdigit(c)) return false;
+    }
+    return true;
+}//fin esNumero
+
+
 //*************************************************************************************************************************** */
 //******************************   Variables Globales                             **************************************** */
 //*************************************************************************************************************************** */
 int cantidadProductos=0;
+string cantidadEnSitrng;
 int productoMalo =0;
+string porductMaloString;
 string* productos;
+
 
 //*************************************************************************************************************************** */
 //******************************    Metodo main                                **************************************** */
 //*************************************************************************************************************************** */
 int main(int argc, char const *argv[])
 {
-    //Pedimos los 2 datos y validamos cumpla entre 5 y 10
+    //Pedimos los 2 datos y validamos que no sea letra y cumpla entre 5 y 10
    do {
         cout << "Ingrese la cantidad de productos en numero: ";
-        cin >> cantidadProductos;
+        cin >> cantidadEnSitrng;
 
         cout << "Ingrese el numero del producto en mal estado: ";
-        cin >> productoMalo;
+        cin >> porductMaloString;
+
+        //Validamos que no venga una letra
+        if (!esNumero(cantidadEnSitrng) || !esNumero(porductMaloString)) {
+        cout << "Error: Ingrese solo numeros enteros.\n";
+        continue;
+        }else{
+            cantidadProductos =stoi(cantidadEnSitrng);
+            productoMalo = stoi(porductMaloString);
+        };
+
     } while (!validarCantidadProductos(cantidadProductos, productoMalo));
 
     //Pedimos la tecla para continuar
