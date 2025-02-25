@@ -10,8 +10,11 @@ using namespace std;
 //*************************************************************************************************************************** */
 
 //Valida los datos de ingreso entre 5 y 10
-bool validarCantidadProductos(int cantidadProductos, int productoMalo) {
+bool validarCantidadProductos(int cantidadProductos,int QuantumDelSO, int productoMalo) {
      if (cantidadProductos < 5 || cantidadProductos > 10 ) {
+        return false;
+    }
+     if (QuantumDelSO < 5 || QuantumDelSO > 10 ) {
         return false;
     }
     if (productoMalo != 0 && productoMalo > cantidadProductos) {
@@ -23,10 +26,11 @@ bool validarCantidadProductos(int cantidadProductos, int productoMalo) {
 //Metodo que crea vector dinamico dependiendo de la cant de productos
 string* vectorProductos(int cantidadProductos) {
     string productosDisponibles[10] = {
-        "Arroz", "Frijoles", "Galletas", "Aceite", "Azucar", 
-        "Sal", "Harina", "Leche", "Pasta", "Cloro"
+        "Tomate", "Papa", "Sandia", "Melon", "Papaya",
+        "Zanahoria", "Pepino", "Lechuga", "Cebolla", "Chile dulce"
     };
-    
+
+        
     // vector dinámico con el tamaño del parametro; El asterisco es un puntero a la 1 casilla del string
     string* productosSeleccionados = new string[cantidadProductos];
     
@@ -35,6 +39,20 @@ string* vectorProductos(int cantidadProductos) {
     }
     
     return productosSeleccionados;
+}//fin vectorProductos
+
+//Metodo que crea vector dinamico con los Quamtum dependiendo de la cant de productos
+int* vectorQuamtum(int cantidadProductos) {
+    int QuantumProductos[10] = {5,12,4,8,2,5,12,4,8,2};
+    
+    // vector dinámico con el tamaño del parametro; El asterisco es un puntero a la 1 casilla del string
+    int* QuamtumSeleccionados = new int[cantidadProductos];
+    
+    for (int i = 0; i < cantidadProductos; i++) {
+        QuamtumSeleccionados[i] = QuantumProductos[i];
+    }
+    
+    return QuamtumSeleccionados;
 }//fin vectorProductos
 
 //Espera S o N para saber si sigue
@@ -127,6 +145,21 @@ string cantidadEnSitrng;
 int productoMalo =0;
 string porductMaloString;
 string* productos;
+int QuantumDelSO =0;
+string QuantumString;
+int* QuantumProductos;
+string puntosDeControl[10] = {
+    "Libre de impurezas",
+    "Organicos",
+    "Vencimiento",
+    "Desinfeccion",
+    "Control Fitosanitarias",
+    "Control de Plagas",
+    "Certificacion Ambiental",
+    "Valor nutricional",
+    "Empaque",
+    "Certificacion"
+};
 
 
 //*************************************************************************************************************************** */
@@ -142,28 +175,35 @@ int main(int argc, char const *argv[])
         cout << "Ingrese el numero del producto en mal estado: ";
         cin >> porductMaloString;
 
+        cout << "Ingrese el Quantum del SO: ";
+        cin >> QuantumString;
+
         //Validamos que no venga una letra
-        if (!esNumero(cantidadEnSitrng) || !esNumero(porductMaloString)) {
+        if (!esNumero(cantidadEnSitrng) || !esNumero(porductMaloString) || !esNumero(QuantumString)) {
         cout << "Error: Ingrese solo numeros enteros.\n";
         continue;
         }else{
             cantidadProductos =stoi(cantidadEnSitrng);
             productoMalo = stoi(porductMaloString);
+            QuantumDelSO = stoi(QuantumString);
         };
 
-    } while (!validarCantidadProductos(cantidadProductos, productoMalo));
+    } while (!validarCantidadProductos(cantidadProductos,QuantumDelSO, productoMalo));
 
     //Pedimos la tecla para continuar
     cout << "Los datos son validos.. ";
     esperarTecla();
 
-    //llenamos el vector dinamico
+    //llenamos los vectores dinamicos
     productos = vectorProductos(cantidadProductos);
+    QuantumProductos = vectorQuamtum(cantidadProductos);
 
     //Recorre el vector de Productos
     int i = 0;
     while (i < cantidadProductos) {
-        cout << "**Analizando Producto " << (i + 1) << ": " << productos[i] << " **" << " Conteo:" ;
+        cout << "**Analizando Producto " << (i + 1) << ": " << productos[i] << " ** \n" ;
+        cout << "Quantum del SO: " << QuantumDelSO <<"\n";
+        cout << "Quantum del Producto: " << QuantumProductos[i] <<"\n";
     //Validamos que no sea el producto malo
           if (i+1 == productoMalo) {
             interrupcionDeLa_P('P',i+1,productos[i]);
@@ -171,11 +211,11 @@ int main(int argc, char const *argv[])
             continue; // Pasa al siguiente producto
         }
         
-        //Recorre el ciclo de . de control
+        //Recorre el ciclo de punto de control
         bool debeSalir = false;
         int j = 1;
         while (j <= 10) {
-            cout <<" "<< j ;
+            cout <<"\rChequeo No. "<< j <<" "<< puntosDeControl[j]<<"           "<<flush ;
             Sleep(400);
             interrupcionesDelUsuario(debeSalir,i + 1, productos[i]);
 
@@ -200,8 +240,10 @@ int main(int argc, char const *argv[])
         i++;
     }
     cout << "Fin, Proceso Completado con exito!!!" << endl;
-    
-  delete[] productos; //libera la memoria del arreglo dinamico
+
+  //libera la memoria del arreglo dinamico  
+  delete[] productos; 
+  delete [] QuantumProductos;
    return 0;
 }//fin del metod main
 
