@@ -2,6 +2,7 @@
 #include <string>
 #include <windows.h> // nos deja usar Sleep
 #include <conio.h> //nos eja usar el _getch que escucha sin oprimir el enter
+#include <queue> //para usar cola
 
 using namespace std;
 
@@ -161,6 +162,9 @@ string puntosDeControl[10] = {
     "Certificacion"
 };
 
+queue<int> colaProductos;// cola que usaremos para el alg. round robin
+
+
 
 //*************************************************************************************************************************** */
 //******************************    Metodo main                                **************************************** */
@@ -180,13 +184,13 @@ int main(int argc, char const *argv[])
 
         //Validamos que no venga una letra
         if (!esNumero(cantidadEnSitrng) || !esNumero(porductMaloString) || !esNumero(QuantumString)) {
-        cout << "Error: Ingrese solo numeros enteros.\n";
-        continue;
-        }else{
+            cout << "Error: Ingrese solo numeros enteros del 5 al 10.\n";
+            continue;
+        };
             cantidadProductos =stoi(cantidadEnSitrng);
             productoMalo = stoi(porductMaloString);
             QuantumDelSO = stoi(QuantumString);
-        };
+        
 
     } while (!validarCantidadProductos(cantidadProductos,QuantumDelSO, productoMalo));
 
@@ -198,26 +202,36 @@ int main(int argc, char const *argv[])
     productos = vectorProductos(cantidadProductos);
     QuantumProductos = vectorQuamtum(cantidadProductos);
 
-    //Recorre el vector de Productos
-    int i = 0;
-    while (i < cantidadProductos) {
-        cout << "**Analizando Producto " << (i + 1) << ": " << productos[i] << " ** \n" ;
-        cout << "Quantum del SO: " << QuantumDelSO <<"\n";
-        cout << "Quantum del Producto: " << QuantumProductos[i] <<"\n";
-    //Validamos que no sea el producto malo
-          if (i+1 == productoMalo) {
-            interrupcionDeLa_P('P',i+1,productos[i]);
-            i++;
-            continue; // Pasa al siguiente producto
+    //llenamos la cola con los productos
+    for (int i = 0; i < cantidadProductos; i++) {
+        colaProductos.push(i);
+    };
+
+    while (!colaProductos.empty()) {
+
+         int productoActual  = colaProductos.front();
+        colaProductos.pop();
+
+        cout << "\n*** Analizando Producto " << (productoActual + 1) << ": " << productos[productoActual] << " *** \n" ;
+        cout << "   Quantum del SO: " << QuantumDelSO <<"\n";
+        cout << "   Quantum del Producto: " << QuantumProductos[productoActual] <<"\n";
+
+        //Validamos que no sea el producto malo
+          if (productoActual+1 == productoMalo) {
+            interrupcionDeLa_P('P',productoActual+1,productos[productoActual]);
+            continue; // Pasamos al siguiente producto
         }
         
-        //Recorre el ciclo de punto de control
         bool debeSalir = false;
-        int j = 1;
-        while (j <= 10) {
-            cout <<"\rChequeo No. "<< j <<" "<< puntosDeControl[j]<<"           "<<flush ;
+        int QuantumConsumido =0;
+
+        //int j = 1;
+        while (QuantumConsumido < QuantumDelSO && QuantumProductos[productoActual] > 0) {
+            cout <<"\r  Chequeo No. "<< QuantumConsumido+1 <<" "<< puntosDeControl[QuantumConsumido]<<"...    "<<flush ;
             Sleep(400);
-            interrupcionesDelUsuario(debeSalir,i + 1, productos[i]);
+            cout << "\r" << string(52, ' ') << flush;       
+            cout <<"\r"<< flush;
+            interrupcionesDelUsuario(debeSalir,productoActual + 1, productos[productoActual]);
 
             //si debeSalir ahora es true, sale de los puntos de control
             if(debeSalir){
@@ -225,25 +239,28 @@ int main(int argc, char const *argv[])
                 esperarTecla_A();
                 break;
             }
-            j++;
+
+            QuantumProductos[productoActual]--; //Reducimos el Quantum del producto
+            QuantumConsumido++;
         }
+
+        if (QuantumProductos[productoActual] > 0) {
+            cout << "--Quantum insuficiente, producto vuelve a la cola. ";
+            colaProductos.push(productoActual);
+        }else {
+            cout << "--Producto completamente procesado. ";
+        }
+
         // Si debeSalir es true, tambien pasamos al siguiente producto sin esperar
         if (debeSalir) {
-            i++;
-            continue; // Pasa al siguiente producto
+            continue;
         }
 
         esperarTecla_Enter();
 
-        cout << "\r" << string(175, ' ') << flush;       
-        cout <<"\r"<< flush;
-        i++;
     }
     cout << "Fin, Proceso Completado con exito!!!" << endl;
 
-  //libera la memoria del arreglo dinamico  
-  delete[] productos; 
-  delete [] QuantumProductos;
    return 0;
 }//fin del metod main
 
